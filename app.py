@@ -101,7 +101,7 @@ def update_figure(station):
 
     fig = px.line(curr_df, x="wy_date", y="Value",
                 color="wy", hover_name="wy",height = 1000,
-                labels = {"wy_date": "Day of Year",
+                labels = {"wy_date": "Water Year (October 1 - September 30)",
                 "Value": "Precipitation (Inches)", },)
 
     fig.update_traces(line=dict(width=3))
@@ -132,6 +132,7 @@ def update_figure(station):
             font_family="Rockwell"
         ))
     fig.update_xaxes(tickformat="%b %d")
+    fig.update_layout(legend_title_text='Water Year')
     # fig.update_layout(transition_duration=500)
 
     return fig
