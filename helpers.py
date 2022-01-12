@@ -38,10 +38,11 @@ def julian_water_year(date):
 
     wy = water_year(date)
 
-    wystart = [datetime.datetime(year,10,1,0,0,0) for year in wy]
+    wystart = [datetime.datetime(year-1,10,1,0,0,0) for year in wy]
     wystart = pd.Series(wystart)
     days_from_start = date-wystart
-    df = datetime.datetime(2000,10,1,0,0,0)+days_from_start-pd.to_timedelta(1, unit = 'D')
+    # df = datetime.datetime(2000,10,1,0,0,0)+days_from_start-pd.to_timedelta(1, unit = 'D')
+    df = datetime.datetime(2000, 10, 1, 0, 0, 0) + days_from_start
     df = df.values
 
     return df

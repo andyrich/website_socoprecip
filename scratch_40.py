@@ -63,10 +63,82 @@ import pandas as pd
 # curr_df = df.query(f"wy>={cur_year}")
 #
 # print(curr_df)
+#
+# t = pd.read_json("https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=VEN&SensorNums=45&dur_code=D&Start=1980-01-16&End=2022-01-12")
+#
+# t.loc[:,'date'] = pd.to_datetime(t.loc[:,'obsDate'])
+# t = t.loc[~(t.loc[:,'value']<-10)]
+# print(t.loc[:,['date','value']])
+# t.plot()
+import get_precip_wy
+options = ['Venado',
+           'Santa Rosa']
+#
+# def get_cur_station(stat = 'Santa Rosa'):
+#     __df = get_precip_wy.get_precip(stat)
+#     if __df is None:
+#         return None
+#
+#     __df = __df.set_index('wy_date')
+#     df_tot = pd.DataFrame()
+#     for g, dfi in __df.groupby('wy'):
+#         dfall = dfi.sort_values('wy_date').cumsum()
+#         dfall.loc[:,'wy'] = g
+#         df_tot = df_tot.append(dfall)
+#     __df = df_tot.reset_index(drop = False)
+#
+#     return __df
+#
+# def get_allstations():
+#     ogdict = {key:get_cur_station(key) for key in options}
+#
+#     #remove stations witout any data
+#     dfall = {k: v for k, v in ogdict.items() if v is not None}
+#
+#     return dfall
+#
+#
+# def get_group(station, dfall):
+#     return dfall[station]
+#
+# def get_station_min_max(df):
+#     # get min and max years
+#     dfstats = df[df.wy_date.dt.month==9].groupby('wy').max().sort_values('Value')
+#     xmin = dfstats.index.values[:2]
+#     print(xmin)
+#     xmind = {f'{xmin[0]} - Driest':xmin[0] }
+#     xmind[f'{xmin[1]} - Second Driest'] = xmin[1]
+#     # xmind[f'{xmin[2]} - Third Driest '] =  xmin[2]
+#
+#     dfstats = df[df.wy_date.dt.month==9].groupby('wy').max().sort_values('Value', ascending=False)
+#     xmax = dfstats.index.values[:2]
+#     xmaxd = {f'{xmax[0]} - Wettest':xmax[0] }
+#     xmaxd[f'{xmax[1]} - Second Wettest'] = xmax[1]
+#     # xmaxd[f'{xmax[2]} - Third Wettest'] = xmax[2]
+#
+#     extremes = pd.Series(xmin)
+#     extremes = extremes.append(pd.Series(xmax))
+#
+#     return xmind, xmaxd, extremes
 
-t = pd.read_json("https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=VEN&SensorNums=45&dur_code=D&Start=1980-01-16&End=2022-01-12")
+dfall = get_precip_wy.get_allstations(options)
 
-t.loc[:,'date'] = pd.to_datetime(t.loc[:,'obsDate'])
-t = t.loc[~(t.loc[:,'value']<-10)]
-print(t.loc[:,['date','value']])
-t.plot()
+
+df = dfall['Venado']
+print(df)
+xmind, xmaxd, extremes = get_precip_wy.get_station_min_max(df)
+
+xxx = df.loc[df.wy_date.dt.month==9,:].groupby('wy').max().sort_values('Value')
+
+print(xxx)
+
+# xxx = df.loc[df.wy_date.dt.month==9,:].groupby('wy').max().sort_values('Value')
+xxx = df.loc[df.loc[:,'wy_date'].dt.month==9,:]
+xxx = xxx.query("wy==2020")
+
+print(xxx)
+
+# df.to_csv('sadf.csv')
+
+df = get_precip_wy.get_precip('Venado', True)
+df.to_csv('erase.csv')
