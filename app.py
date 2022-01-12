@@ -43,10 +43,13 @@ def update_figure(station):
 
     # get last 6 years. exclude years in min/max lists
     filtered_df = df.copy()
-    maxyear = pd.Timestamp.now().year - 7
+    current_year = pd.Timestamp.now().year
+    current_year = current_year if pd.Timestamp.now().month<10 else current_year+1
+    maxyear = current_year - 7
     # cur_year = pd.np.arange(maxyear,2030,1)
 
     xmind, xmaxd, extremes = get_precip_wy.get_station_min_max(df)
+    extremes = extremes.append(pd.Series([current_year]))
 
     curf_df = filtered_df.loc[~(filtered_df.wy.isin(extremes)),:]
     curr_df = curf_df.query(f"wy>={maxyear}")
@@ -57,7 +60,13 @@ def update_figure(station):
                 "Value": "Precipitation (Inches)", },
                   title= station)
 
-    fig.update_traces(line=dict(width=3))
+    curr_year_df = df.query(f"wy=={current_year}")
+    fig.add_trace(go.Scatter(x=curr_year_df.loc[:, 'wy_date'], y=curr_year_df.loc[:, 'Value'],
+                             mode='none', name=f"{current_year} - Current Water Year",
+                        line = dict(color='firebrick', width=10)))
+    # fig.update_traces(line=dict(color="RoyalBlue", width=10),
+    #                   selector=dict(name="2022"))
+    # fig.update_layout()
 
 
     for v in xmind.keys():
@@ -80,7 +89,6 @@ def update_figure(station):
     fig.update_layout(
         hoverlabel=dict(
             bgcolor="white",
-            # opacity = 100,
             font_size=16,
             font_family="Rockwell"
         ))
