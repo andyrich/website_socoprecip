@@ -1,6 +1,6 @@
 import os
 
-
+import numpy as np
 import plotly.express as px
 from dash.dependencies import Input, Output
 from dash import dash_table as dt
@@ -81,9 +81,32 @@ def update_figure(station):
 
 
     av_df = df.groupby('wy_date').mean().rolling(7).mean()
-    fig.add_trace(go.Scatter(x=av_df.reset_index().loc[:,'wy_date'], y=av_df.loc[:,'Value'], fill='tozeroy',
+    fig.add_trace(go.Scatter(x=av_df.reset_index().loc[:,'wy_date'], y=av_df.loc[:,'Value'],
+                             # fill='None',
                              mode='none', line_color='black',
                              fillcolor='rgba(135,206,235,.5)', name='Historic Daily Average'))
+
+    colors = px.colors.sequential.Cividis_r
+    for cnt, quant in enumerate([[10,90], [20,80], ]):
+        upper = df.groupby('wy_date').quantile(quant[0]/100).rolling(7).mean()
+        lower = df.groupby('wy_date').quantile(quant[1]/100).rolling(7).mean()
+        index = upper.reset_index().loc[:,'wy_date'].values
+        xxi = upper.loc[:,'Value'].values
+        yyi = lower.loc[:,'Value'].values
+        print(xxi)
+        print(index)
+        fig.add_trace(go.Scatter(
+            x=np.concatenate([index, index[::-1]]),
+            y=np.concatenate([xxi, yyi[::-1]]),
+            fill='toself',
+            hoveron='points',
+            line=dict(color='grey'),
+            fillcolor = colors[cnt],
+            opacity=0.2,
+            name=f'{quant[0]}th - {quant[1]}th Percentile'),
+        )
+
+
     fig.update_layout(hovermode="x")
     fig.update_traces(mode="lines", hovertemplate='%{y:,d} <i>in.</i>')
     fig.update_layout(
