@@ -70,10 +70,10 @@ def get_station_min_max(df):
     return xmind, xmaxd, extremes
 
 dfall = get_allstations()
-
+today = pd.Timestamp.now().strftime('%A, %B %d %Y')
 
 app.layout = html.Div([
-    html.H2('Sonoma County Precipitation and Climatology'),
+    html.H2(f'Sonoma County Observed Precipitation for {today}'),
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in dfall.keys()],
