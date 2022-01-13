@@ -17,9 +17,10 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
 
-options = ['Venado',
-           'Santa Rosa',
-           'Ukiah']
+options = ['Venado (Near Lake Sonoma)',
+           'Santa Rosa Airport',
+           'Ukiah Airport',
+           'Sonoma (General Vallejo)']
 
 
 dfall = get_precip_wy.get_allstations(options=options)
@@ -30,8 +31,7 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in dfall.keys()],
-        value='Santa Rosa'
-    ),
+        value='Sonoma (General Vallejo)'),
     dcc.Graph(id = 'graph')
 ])
 

@@ -32,7 +32,7 @@
 # #     return tab
 # import pandas as pd
 #
-# # import get_precip_wy
+# import get_precip_wy
 # #
 # # # df = get_precip_wy.get_precip('Santa Rosa')
 # # df = get_precip_wy.get_precip('Santa Rosa')
@@ -121,7 +121,8 @@
 # #
 # #     return xmind, xmaxd, extremes
 #
-# dfall = get_precip_wy.get_allstations(options)
+import get_precip_wy
+dfall = get_precip_wy.get_allstations(None)
 #
 #
 # df = dfall['Venado']
@@ -142,16 +143,16 @@
 #
 # df = get_precip_wy.get_precip('Venado', True)
 # df.to_csv('erase.csv')
-import plotly.graph_objects as go
-import plotly.express as px
-import numpy as np
-
-x = np.linspace(0, 10, 100)
-y1 = 12 - 10 * np.exp(-0.9*x)
-y2 = 10 - 10 * np.exp(-x)
-
-y3 = 6  + 10 * np.exp(-x)
-y4 = 5 + 10 * np.exp(-0.9*x)
+# import plotly.graph_objects as go
+# import plotly.express as px
+# import numpy as np
+#
+# x = np.linspace(0, 10, 100)
+# y1 = 12 - 10 * np.exp(-0.9*x)
+# y2 = 10 - 10 * np.exp(-x)
+#
+# y3 = 6  + 10 * np.exp(-x)
+# y4 = 5 + 10 * np.exp(-0.9*x)
 
 
 colors = px.colors.qualitative.Plotly

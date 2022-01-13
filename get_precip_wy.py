@@ -1,13 +1,16 @@
 import pandas as pd
 import helpers
 
+ts_ids = {'Venado (Near Lake Sonoma)': "1964010",
+          'Santa Rosa Airport': "1976010",
+          'Ukiah Airport': '1977010',
+          'Sonoma (General Vallejo)': "59424010"}
 
-def get_precip(ts, raw = False):
-    ts_ids = {'Venado': "1964010",
-              'Santa Rosa': "1976010",
-              'Ukiah':'1977010'}
 
-    ts = ts_ids[ts]
+def get_precip(ts_i, raw = False):
+
+
+    ts = ts_ids[ts_i]
 
     t = r"https://www.kisters.net/sonomacountygroundwater/KiWIS/KiWIS?service=kisters&type=queryServices&request=getTimeseriesValues&datasource=0&format=csv&ts_id={:}&from=1990-01-01&"
 
@@ -33,6 +36,13 @@ def get_precip(ts, raw = False):
     tab.loc[:, 'wy'] = helpers.water_year(tab.index)
     tab.loc[:, 'wy_date'] = helpers.julian_water_year(tab.reset_index().loc[:, 'Date'])
 
+    #filter data to wy after 2015 or those with more than 250 observations per year
+    cnt = tab.groupby('wy').count()
+    cnt = cnt.loc[:,'Value']
+    filt = (cnt>250) | (cnt.index>2015)
+    cnt = cnt[filt]
+    tab = tab.loc[tab.wy.isin(cnt.index),:]
+
     return tab
 
 
@@ -54,7 +64,7 @@ def get_cur_station(stat = 'Santa Rosa'):
 
 def get_allstations(options):
     if options is None:
-        options = ['Santa Rosa', "Venado"]
+        options = list(ts_ids.keys())
     ogdict = {key:get_cur_station(key) for key in options}
 
     #remove stations witout any data
