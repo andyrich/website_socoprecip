@@ -4,7 +4,8 @@ import helpers
 
 def get_precip(ts, raw = False):
     ts_ids = {'Venado': "1964010",
-              'Santa Rosa': "1976010"}
+              'Santa Rosa': "1976010",
+              'Ukiah':'1977010'}
 
     ts = ts_ids[ts]
 

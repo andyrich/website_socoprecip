@@ -18,7 +18,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 options = ['Venado',
-           'Santa Rosa']
+           'Santa Rosa',
+           'Ukiah']
 
 
 dfall = get_precip_wy.get_allstations(options=options)
@@ -93,8 +94,6 @@ def update_figure(station):
         index = upper.reset_index().loc[:,'wy_date'].values
         xxi = upper.loc[:,'Value'].values
         yyi = lower.loc[:,'Value'].values
-        print(xxi)
-        print(index)
         fig.add_trace(go.Scatter(
             x=np.concatenate([index, index[::-1]]),
             y=np.concatenate([xxi, yyi[::-1]]),
@@ -103,8 +102,7 @@ def update_figure(station):
             line=dict(color='grey'),
             fillcolor = colors[cnt],
             opacity=0.2,
-            name=f'{quant[0]}th - {quant[1]}th Percentile'),
-        )
+            name=f'{quant[0]}th - {quant[1]}th Percentile'),)
 
 
     fig.update_layout(hovermode="x")
