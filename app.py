@@ -115,7 +115,34 @@ def update_figure(station):
         ))
     fig.update_xaxes(tickformat="%b %d")
     fig.update_layout(legend_title_text='Water Year')
-    # fig.update_layout(transition_duration=500)
+
+    years = df.wy.astype(str).unique()
+    years = ', '.join(years)
+    note = 'years in record: '+years
+    # make space for explanation / annotation
+    fig.update_layout(margin=dict(l=20, r=20, t=60, b=150))
+
+    # add annotation
+
+    fig.add_annotation(
+        showarrow=False,
+        text=note,
+        font=dict(size=10),
+        xref='x domain',
+        x=0.5,
+        yref='y domain',
+        y=-0.5
+    )
+
+    # fig.add_annotation(dict(font=dict(color='black', size=10),
+    #                         x=0,
+    #                         y=-0.12,
+    #                         showarrow=False,
+    #                         text=note,
+    #                         textangle=0,
+    #                         xanchor='left',
+    #                         xref="paper",
+    #                         yref="paper"))
 
     return fig
 
